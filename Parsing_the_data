@@ -1,6 +1,6 @@
 <?php
 $time = time();
-$timeforGnuplot = $time + 7200;
+$timeforGnuplot = $time + 7200; //offset adjustment for time zone changes
 $year = date(Y, $time);
 $month = date(m, $time);
 $day = date(d, $time);

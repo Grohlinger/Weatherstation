@@ -1,14 +1,12 @@
-
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//Gas Detector MQ2                                                             +
-//                                           Feuchtigkeits-Sensor KY-015       +
-//                     Luftdruck-Sensor BMP280                         X  GND  +
-//                                                                     X  +5V  +
-//                                                                             +
-//                        A3       A1                                  X  SDA  +
-//                        X  X  X  X                                   X  SCL  +
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Configurations:
+//Oxygen-Sensor ME2 A0                                                        
+//DHT 11 Humidity and Temperature-Sensor A1
+//MQ-9B Carbon Monoxide or Gas-Sensor A2
+//MQ 2 Gas and Smoke-Sensor A3
+//BMP 280 Temperature and Pressure Sensor SDA/SCL
+//RTC for potential offshore Measurement and writing to SD card SDA/SCL
+// 
+//
 #include <EEPROM.h>
 #include <MQ2.h>
 #include <DS3231.h>
@@ -62,11 +60,11 @@ float co_concentration = 0;
 const float euler = 2.71828183;
 //end CO-Sensor
 
-char ssid[] = "Livebox-0C2A";        // your network SSID (name)
-char pass[] = "92A4E22598276296053E528336";    // your network password (use for WPA, or use as key for WEP)
+char ssid[] = "<enter your SSID>";        // your network SSID (name)
+char pass[] = "<enter your password>";    // your network password
 
 int status = WL_IDLE_STATUS;
-char server[] = "www.family-groh.eu";    
+char server[] = "<www.servername.DNSorIP.where.to.write.the.data.to>";    
 
 WiFiClient client;
 
@@ -101,11 +99,13 @@ void setup() {
     Serial.println(F("Could not find a valid BMP280 sensor, check wiring!"));
     while (1);
   }
-Serial.println("year \tmonth \tday \thour \tmin \tsec \tunixtime [s]\tTemp. [°C]\tPress. [Pa]\tAlt. [m]\tHumid. [%]\tLPG [PPM] \tCO [PPM] \tSmoke [PPM] \tDust [pcs/l] \tO2 [%] \tCO [PPB] ");
+//this is to verify if the weatherstation works properly. Time data can be useful if weatherstation has no current internet connection but needs to write to an SD card.
+ Serial.println("year \tmonth \tday \thour \tmin \tsec \tunixtime [s]\tTemp. [°C]\tPress. [Pa]\tAlt. [m]\tHumid. [%]\tLPG [PPM] \tCO [PPM] \tSmoke [PPM] \tDust [pcs/l] \tO2 [%] \tCO [PPB] ");
 
 }
  
 void loop(){
+    //connection could get lost over time. Hence, reconnect:
     while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
@@ -125,7 +125,7 @@ void loop(){
     
     temp1 = bmp.readTemperature();
     pressure = bmp.readPressure();
-    alt = bmp.readAltitude(1019); // this should be adjusted to your local forcase
+    alt = bmp.readAltitude(1019); 
     humidity = dht.readHumidity();
     temp2 = dht.readTemperature();
     temperature = (temp1+temp2)/2;
@@ -150,7 +150,7 @@ void loop(){
     
     smoke = analogRead(smokesensor);
     DateTime now = myRTC.now();
- 
+    //this is to verify if the weatherstation works properly. Time data can be useful if weatherstation has no current internet connection but needs to write to an SD card.
     Serial.print(now.year(), DEC);
     Serial.print("\t");
     Serial.print(now.month(), DEC);
@@ -197,8 +197,8 @@ void loop(){
     if (client.connect(server, 80)) {
     Serial.println("connected to server");
     // Make a HTTP request:
-    client.println("POST /weatherstation/post.php HTTP/1.1");
-    client.println("Host: www.family-groh.eu");
+    client.println("POST </path/to/the/location/of/the/PHP-file/handling/the/request/anyname.php> HTTP/1.1");
+    client.println("Host: <www.servername.DNSorIP.where.to.write.the.data.to>");
     client.println("Content-Type: application/x-www-form-urlencoded");
     client.print("Content-Length: ");
     client.println(postData.length());

@@ -1,0 +1,51 @@
+set xdata time
+set timefmt "%s"
+set format x "%d/%m \n%H:%M"    
+set datafile separator comma
+set terminal jpeg
+unset key
+set grid
+set autoscale xy
+set term pngcairo
+set terminal png size 2048,768
+set output "Temperature.png"
+set title "Temperature [Deg. C]"
+set ylabel "Temperature [Deg. C]"
+set xlabel "Date\nTime"
+plot 'history.txt' using 1:2
+pause 2
+
+set output "Pressure.png"
+set title "Pressure [Pa]"
+set ylabel "Pressure [Pa]"
+plot 'history.txt' using 1:3
+pause 2
+
+set output "Humidity.png"
+set title "Humidity [%]"
+set ylabel "Humidity [%]"
+plot 'history.txt' using 1:4
+pause 2
+
+set output "LPG.png"
+set title "LPG-Concentration [PPM]"
+set ylabel "LPG-Concentration [PPM]"
+plot 'history.txt' using 1:5
+pause 2
+
+set output "Smoke.png"
+set title "Smoke-Concentration [PPM]"
+set ylabel "Smoke-Concentration [PPM]"
+plot 'history.txt' using 1:6
+pause 2
+
+set output "Dust.png"
+set title "Dust Particles [Pcs/l]"
+set ylabel "Dust-Particles [Pcs/l]"
+plot 'history.txt' using 1:7
+pause 2
+
+set output "Oxygen.png"
+set title "Oxygen-Concentration [%]"
+set ylabel "Oxygen-Concentration [%]"
+plot 'history.txt' using 1:8

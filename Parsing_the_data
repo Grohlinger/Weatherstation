@@ -1,0 +1,26 @@
+<?php
+$time = time();
+$timeforGnuplot = $time + 7200;
+$year = date(Y, $time);
+$month = date(m, $time);
+$day = date(d, $time);
+$hour = date(H, $time);
+$minute = date(i, $time);
+$second = date(s, $time);
+$feedtime = $year."/".$month."/".$day." - ".$hour.":".$minute.":".$second;
+$temp = $_POST["temp"];
+$pressure = $_POST["pressure"];
+$humidity = $_POST["humidity"];
+$lpg = $_POST["lpg"];
+$smoke = $_POST["smoke"];
+$dustconcentration = $_POST["dustconcentration"];
+$oxygenconcentration = $_POST["oxygenconcentration"];
+$co_concentration = $_POST["co_concentration"];
+$file = 'current_weather.html';
+$history = 'history.txt';
+$current_data =  "<!DOCTYPE html> <html> <style> table, th, td {border: 1px solid black; border-collapse: collapse;}</style> <head> <title>Scientific Environmental Data</title> </head> <body> <h1>Current Environmental Observations at the <a href=https://www.google.com/maps/@45.760902,4.7647402,17.87z>Tassin-la-Demi-Lune</a> Weather Outpost.</h1><table><tr><th>Time </th><th>Temperature [C]   </th><th>Pressure [Pa]   </th><th>Humidity [%]   </th><th>LPG [PPM]   </th><th>Smoke [PPM]   </th><th>Dust-Particles [Pcs/l]   </th><th>Oxygen-Concentration [%]   </th><th>CO-Concentration [PPM]   </th></tr><tr><td>".$feedtime."</td><td>".$temp."</td><td>".$pressure."</td><td>".$humidity."</td><td>".$lpg."</td><td>".$smoke."</td><td>".$dustconcentration."</td><td>".$oxygenconcentration."</td><td>".$co_concentration."</td></tr></table> </body> </html>";
+file_put_contents($file, $current_data);
+$amend_data = $timeforGnuplot.",".$temp.",".$pressure.",".$humidity.",".$lpg.",".$smoke.",".$dustconcentration.",".$oxygenconcentration.",".$co_concentration."\r\n";
+file_put_contents($history, $amend_data, FILE_APPEND);
+?>
+ 

@@ -1,11 +1,13 @@
 //Configurations:
-//Oxygen-Sensor ME2 A0                                                        
-//DHT 11 Humidity and Temperature-Sensor A1
-//MQ-9B Carbon Monoxide or Gas-Sensor A2
-//MQ 2 Gas and Smoke-Sensor A3
-//BMP 280 Temperature and Pressure Sensor SDA/SCL
-//RTC for potential offshore Measurement and writing to SD card SDA/SCL
-// 
+//Oxygen-Sensor ME2: A0                                                        
+//DHT 11 Humidity and Temperature-Sensor: A1
+//MQ-9B Carbon Monoxide or Gas-Sensor: A2
+//MQ 2 Gas and Smoke-Sensor: A3
+//Shiney PPD 42 Dust-Sensor: Digital Pin 8
+//BMP 280 Temperature and Pressure Sensor: SDA/SCL
+//RTC for potential offshore Measurement and writing to SD card: SDA/SCL
+//
+//Personal remark: I am not sure if the sensors all measure what they should. However, they create some interesting data to process for the learning process...;) 
 //
 #include <EEPROM.h>
 #include <MQ2.h>
@@ -22,7 +24,7 @@ DHT dht(DHTPIN, DHTTYPE);
 RTClib myRTC;
 
 //begin original weather station
-int smokesensor = A3;
+const int smokesensor = A3;
 float temp1 = 0;
 float temp2 = 0;
 float temperature = 0;
@@ -39,7 +41,7 @@ MQ2 mq2(smokesensor);
 //end original weather station
 
 //begin dustsensor
-int dustsensorpin = 8;
+const int dustsensorpin = 8;
 unsigned long duration;
 unsigned long starttime;
 unsigned long sampletime_ms = 30000;
@@ -227,7 +229,7 @@ void loop(){
 }
 
 
-//two Oxygen Sensor functions follow
+//two Oxygen Sensor functions follow - honestly not sure how reliable the feed of this sensor is anyway...
 float readO2Vout()
 {
     long sum = 0;

@@ -2,12 +2,12 @@ set xdata time
 set timefmt "%s"
 set format x "%d/%m \n%H:%M"    
 set datafile separator comma
-set terminal jpeg
 unset key
 set grid
 set autoscale xy
 set term pngcairo
 set terminal png size 2048,768
+
 set output "Temperature.png"
 set title "Temperature [Deg. C]"
 set ylabel "Temperature [Deg. C]"

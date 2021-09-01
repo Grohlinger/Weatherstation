@@ -11,7 +11,7 @@ $averages = [];
 $firstobs = 0;
 $output = "";
 $addoutput = "";
-$interval = 600;
+$interval = $_POST["interval"]; //or, e.g. a fixed rate such as 600 seconds, i.e. ten minutes
 
 // Open the file for reading
 if (($h = fopen("{$inputfilename}", "r")) !== FALSE) 

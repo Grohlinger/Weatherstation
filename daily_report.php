@@ -147,8 +147,8 @@ for ($z = 0; $z < 9; $z++)
         {
         $averages_day [$z] = round(($rowsum[$z] / $count),2);
         }
-$temp_average_day = $averages_day [1];
 
+//prepare newsletter
 $subject = 'Daily Tassin-la-Demi-Lune Weather-Station Update'; 
 $headers .= "MIME-Version: 1.0\r\n";
 $headers .= "Content-Type: text/html; charset=UTF-8\r\n";

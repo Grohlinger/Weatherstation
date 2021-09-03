@@ -70,38 +70,38 @@ $start_row_day = $rows-1;
 
 for ($z = 0; $z < 9; $z++)
 	{
-		$maxima_night [$z] [0] = $the_big_array [$rows-1][$z];
-		$minima_night [$z] [0]= $the_big_array [$rows-1][$z];
-		$maxima_night [$z] [1] = $the_big_array [$rows-1][0];
-		$minima_night [$z] [1]= $the_big_array [$rows-1][0];
-		$maxima_day [$z] [0] = $the_big_array [$start_row_night-1][$z];
-		$minima_day [$z] [0]= $the_big_array [$start_row_night-1][$z];
-		$maxima_day [$z] [1] = $the_big_array [$start_row_night-1][0];
-		$minima_day [$z] [1]= $the_big_array [$start_row_night-1][0];
+	$maxima_night [$z] [0] = $the_big_array [$rows-1][$z];
+	$minima_night [$z] [0]= $the_big_array [$rows-1][$z];
+	$maxima_night [$z] [1] = $the_big_array [$rows-1][0];
+	$minima_night [$z] [1]= $the_big_array [$rows-1][0];
+	$maxima_day [$z] [0] = $the_big_array [$start_row_night-1][$z];
+	$minima_day [$z] [0]= $the_big_array [$start_row_night-1][$z];
+	$maxima_day [$z] [1] = $the_big_array [$start_row_night-1][0];
+	$minima_day [$z] [1]= $the_big_array [$start_row_night-1][0];
 	}
 for (($j = ($rows-1)); $j >= 0; $j--) 
 	{
-		if ($the_big_array[$j][0] > $begin_night)
-		$start_row_night--;
+	if ($the_big_array[$j][0] > $begin_night)
+	$start_row_night--;
 		
-		if($the_big_array[$j][0] > $begin_day)
-		$start_row_day--;
+	if($the_big_array[$j][0] > $begin_day)
+	$start_row_day--;
 	}
   
 for ($j = $rows-1; $j >= $start_row_night; $j--)
 { 	
 	for ($z = 0; $z < 9; $z++)
 	{
-		if ($the_big_array [$j][$z] > $maxima_night [$z][0])
-        {
-          $maxima_night [$z][0] = $the_big_array [$j][$z];
-		  $maxima_night [$z][1] = $the_big_array [$j][0];
-        }
-		if ($the_big_array [$j][$z] <= $minima_night [$z][0])
-        {
-          $minima_night [$z][0]= $the_big_array [$j][$z];
-		  $minima_night [$z][1]= $the_big_array [$j][0];
-        }
+	if ($the_big_array [$j][$z] > $maxima_night [$z][0])
+           {
+           $maxima_night [$z][0] = $the_big_array [$j][$z];
+	   $maxima_night [$z][1] = $the_big_array [$j][0];
+           } 
+	if ($the_big_array [$j][$z] <= $minima_night [$z][0])
+           {
+           $minima_night [$z][0]= $the_big_array [$j][$z];
+           $minima_night [$z][1]= $the_big_array [$j][0];
+           }
 	}
     $count++;
     for ($z = 0; $z < 9; $z++)
@@ -115,9 +115,9 @@ for ($z = 0; $z < 9; $z++)
       }
 $count=0;
 for ($i = 0; $i < 9; $i++) 
-			{
-			unset($rowsum[$i]);
-			}
+      {
+      unset($rowsum[$i]);
+      }
 		
 //night time calculation finished. Now follows the same for day time
 
@@ -125,16 +125,16 @@ for ($j = ($start_row_night-1); $j >= $start_row_day; $j--)
 {
 	for ($z = 0; $z < 9; $z++)
 	{
-		if ($the_big_array [$j][$z] > $maxima_day [$z][0])
+	if ($the_big_array [$j][$z] > $maxima_day [$z][0])
         {
           $maxima_day [$z][0] = $the_big_array [$j][$z];
-		  $maxima_day [$z][1] = $the_big_array [$j][0];
+	  $maxima_day [$z][1] = $the_big_array [$j][0];
         }
       
-		if ($the_big_array [$j][$z] <= $minima_day [$z] [0])
+	if ($the_big_array [$j][$z] <= $minima_day [$z] [0])
         {
           $minima_day [$z][0]= $the_big_array [$j][$z];
-		  $minima_day [$z][1]= $the_big_array [$j][0];
+	  $minima_day [$z][1]= $the_big_array [$j][0];
         }
 	}
     $count++;
@@ -192,14 +192,9 @@ $message = '
     </tr>
    </table>
    <p>We hope that you like the information we provide on the latest weather conditions and thank you very much for your interest.</p>
-   </br>
-   </br>
-   </br>
-   <p style="font-size:10px;">*)Should you wish to unsubscribe from our newsletter please contact our Sales Manager Umbuthuanga Odeth Sambawabde in our office in Linglongwe, Malawi, ph.: +387.65.45.73.91, during local office hours. 
 </body>
 </html>
 ';
-  
-mail($to, $subject, $message, $headers);
 
+mail($to, $subject, $message, $headers);
 ?>	   

@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 $inputfilename = 'history.txt';
 $mailing_list_file = 'mailing_list.txt';
@@ -13,15 +13,14 @@ $maxima_night = [];
 $minima_night = [];
 $maxima_day = [];
 $minima_day = [];
-$begin_night = [];
-$begin_day = [];
+$begin_night = 0;
+$begin_day = 0;
 $lastobs = 0;
-$output = "";
-$addoutput = "";
 $mailing_list = [];
-$mailto = [];
 $nr_addresses = 0;
-$to = "";
+$dev_x = [];
+$dev_y = [];
+$trends =array("deteriotating","stable","improving"); //short term weather trends according to the recent slope of the air pressure development
 
 // Open the file for reading
 if (($h = fopen("{$inputfilename}", "r")) !== FALSE) 
@@ -54,12 +53,6 @@ if (($k = fopen("{$mailing_list_file}", "r")) !== FALSE)
   // Close the file
   fclose($k);
 }
-for ($i = 0; $i < $nr_addresses; $i++)
-  {
-  $mailto[$i] = $mailing_list[$i][3];
-  }
-$to = implode(",",$mailto);
-$to ="'".$to."'";
 
 //end mailing list, continue script
 $lastobs = $the_big_array [$rows-1][0];
@@ -70,38 +63,38 @@ $start_row_day = $rows-1;
 
 for ($z = 0; $z < 9; $z++)
 	{
-	$maxima_night [$z] [0] = $the_big_array [$rows-1][$z];
-	$minima_night [$z] [0]= $the_big_array [$rows-1][$z];
-	$maxima_night [$z] [1] = $the_big_array [$rows-1][0];
-	$minima_night [$z] [1]= $the_big_array [$rows-1][0];
-	$maxima_day [$z] [0] = $the_big_array [$start_row_night-1][$z];
-	$minima_day [$z] [0]= $the_big_array [$start_row_night-1][$z];
-	$maxima_day [$z] [1] = $the_big_array [$start_row_night-1][0];
-	$minima_day [$z] [1]= $the_big_array [$start_row_night-1][0];
+		$maxima_night [$z] [0] = $the_big_array [$rows-1][$z];
+		$minima_night [$z] [0]= $the_big_array [$rows-1][$z];
+		$maxima_night [$z] [1] = $the_big_array [$rows-1][0];
+		$minima_night [$z] [1]= $the_big_array [$rows-1][0];
+		$maxima_day [$z] [0] = $the_big_array [$start_row_night-1][$z];
+		$minima_day [$z] [0]= $the_big_array [$start_row_night-1][$z];
+		$maxima_day [$z] [1] = $the_big_array [$start_row_night-1][0];
+		$minima_day [$z] [1]= $the_big_array [$start_row_night-1][0];
 	}
 for (($j = ($rows-1)); $j >= 0; $j--) 
 	{
-	if ($the_big_array[$j][0] > $begin_night)
-	$start_row_night--;
+		if ($the_big_array[$j][0] > $begin_night)
+		$start_row_night--;
 		
-	if($the_big_array[$j][0] > $begin_day)
-	$start_row_day--;
+		if($the_big_array[$j][0] > $begin_day)
+		$start_row_day--;
 	}
   
 for ($j = $rows-1; $j >= $start_row_night; $j--)
 { 	
 	for ($z = 0; $z < 9; $z++)
 	{
-	if ($the_big_array [$j][$z] > $maxima_night [$z][0])
-           {
-           $maxima_night [$z][0] = $the_big_array [$j][$z];
-	   $maxima_night [$z][1] = $the_big_array [$j][0];
-           } 
-	if ($the_big_array [$j][$z] <= $minima_night [$z][0])
-           {
-           $minima_night [$z][0]= $the_big_array [$j][$z];
-           $minima_night [$z][1]= $the_big_array [$j][0];
-           }
+		if ($the_big_array [$j][$z] > $maxima_night [$z][0])
+        {
+          $maxima_night [$z][0] = $the_big_array [$j][$z];
+		  $maxima_night [$z][1] = $the_big_array [$j][0];
+        }
+		if ($the_big_array [$j][$z] <= $minima_night [$z][0])
+        {
+          $minima_night [$z][0]= $the_big_array [$j][$z];
+		  $minima_night [$z][1]= $the_big_array [$j][0];
+        }
 	}
     $count++;
     for ($z = 0; $z < 9; $z++)
@@ -115,9 +108,9 @@ for ($z = 0; $z < 9; $z++)
       }
 $count=0;
 for ($i = 0; $i < 9; $i++) 
-      {
-      unset($rowsum[$i]);
-      }
+			{
+			unset($rowsum[$i]);
+			}
 		
 //night time calculation finished. Now follows the same for day time
 
@@ -125,16 +118,16 @@ for ($j = ($start_row_night-1); $j >= $start_row_day; $j--)
 {
 	for ($z = 0; $z < 9; $z++)
 	{
-	if ($the_big_array [$j][$z] > $maxima_day [$z][0])
+		if ($the_big_array [$j][$z] > $maxima_day [$z][0])
         {
           $maxima_day [$z][0] = $the_big_array [$j][$z];
-	  $maxima_day [$z][1] = $the_big_array [$j][0];
+		  $maxima_day [$z][1] = $the_big_array [$j][0];
         }
       
-	if ($the_big_array [$j][$z] <= $minima_day [$z] [0])
+		if ($the_big_array [$j][$z] <= $minima_day [$z] [0])
         {
           $minima_day [$z][0]= $the_big_array [$j][$z];
-	  $minima_day [$z][1]= $the_big_array [$j][0];
+		  $minima_day [$z][1]= $the_big_array [$j][0];
         }
 	}
     $count++;
@@ -148,8 +141,30 @@ for ($z = 0; $z < 9; $z++)
         $averages_day [$z] = round(($rowsum[$z] / $count),2);
         }
 
-//prepare newsletter
-$subject = 'Daily Tassin-la-Demi-Lune Weather-Station Update'; 
+//run regression to determine slope of atmospheric pressure
+
+for ($z = $start_row_night; $z <= $rows-1; $z++)
+	{
+	$dev_x [$z]= $the_big_array [$z][0]- $averages_night [0];
+	$dev_y [$z]= $the_big_array [$z][2]- $averages_night [2];
+	$dev_x_dev_y[$z] = $dev_x[$z]*$dev_y[$z];
+	$sum_dev_x_dev_y += $dev_x_dev_y[$z];
+	$dev_x_squared [$z]= $dev_x[$z]*$dev_x[$z];
+	$covar_x += $dev_x_squared[$z];
+	}
+$slope=$sum_dev_x_dev_y/$covar_x;
+//to print out the weather trend in the newsletter
+if ($slope <= -0.001){
+	$current_trend = $trends[0];}
+else if ($slope >= 0.001){
+	$current_trend = $trends[2];}
+else {$current_trend = $trends [1];}
+
+//generate emails to recipients of the mailing list
+for ($i = 0; $i <= $nr_addresses-1; $i++)
+{
+
+$subject = 'Weather-Station Update'; 
 $headers .= "MIME-Version: 1.0\r\n";
 $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 $message = '
@@ -159,8 +174,8 @@ $message = '
   <title>Summary of the latest weather conditions</title>
 </head>
 <body>
-  <h2>Dear Subscriber* of our Mailing List,</h2>
-  <p>Here are the observations of the last 24 hours.</p>
+  <h2>Dear '.$mailing_list[$i][2].',</h2>
+  <p>We thank you for your interest in our weather data. Here are the environmental observations of the last 24 hours.</p>
   <p>Please note that day-time is considered between 6:00 and 20:00, while night-time is 20:00 until 6:00 in the morning of the following day.</p>  
   <table>
     <tr>
@@ -191,10 +206,17 @@ $message = '
       <td style="text-align:center">CO-Concentration [PPM]</td><td style="text-align:center">'.$averages_day [8].'</td><td style="text-align:center">'.$maxima_day[8][0].'</td><td style="text-align:center">'.date('H',$maxima_day[8][1]).':'.date('i',$maxima_day[8][1]).'</td><td style="text-align:center">'.$minima_day[8][0].'</td><td style="text-align:center">'.date('H',$minima_day[8][1]).':'.date('i',$minima_day[8][1]).'</td><td style="text-align:center">'.$averages_night [8].'</td><td style="text-align:center">'.$maxima_night[8][0].'</td><td style="text-align:center">'.date('H',$maxima_night[8][1]).':'.date('i',$maxima_night[8][1]).'</td><td style="text-align:center">'.$minima_night [8][0].'</td><td style="text-align:center">'.date('H',$minima_night[8][1]).':'.date('i',$minima_night[8][1]).'</td>
     </tr>
    </table>
+   <p> The short term weather forecast for Tassin-la-Demi-Lune is: <b>'.$current_trend.'!</b></p>
    <p>We hope that you like the information we provide on the latest weather conditions and thank you very much for your interest.</p>
+      
 </body>
-</html>
-';
+</html>'
+;
+  
+mail($mailing_list[$i][3], $subject, $message, $headers);
+sleep(1);
 
-mail($to, $subject, $message, $headers);
+}
+
 ?>	   
+

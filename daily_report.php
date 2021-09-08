@@ -1,12 +1,14 @@
- <?php
+<?php
 
 $inputfilename = 'history.txt';
 $mailing_list_file = 'mailing_list.txt';
 $rows = 0;
 // The nested array to hold all the arrays
 $the_big_array = [];
-$rowsum = [];
-$count = 0;
+$rowsum_night = [];
+$rowsum_day = [];
+$night_row_count = 0;
+$day_row_count = 0;
 $averages_night = [];
 $averages_day = [];
 $maxima_night = [];
@@ -58,88 +60,78 @@ if (($k = fopen("{$mailing_list_file}", "r")) !== FALSE)
 $lastobs = $the_big_array [$rows-1][0];
 $begin_night = $lastobs - 36000;
 $begin_day = $lastobs - 86400;
-$start_row_night = $rows-1;
-$start_row_day = $rows-1;
 
+
+$j = $rows-1;
 for ($z = 0; $z < 9; $z++)
 	{
-		$maxima_night [$z] [0] = $the_big_array [$rows-1][$z];
-		$minima_night [$z] [0]= $the_big_array [$rows-1][$z];
-		$maxima_night [$z] [1] = $the_big_array [$rows-1][0];
-		$minima_night [$z] [1]= $the_big_array [$rows-1][0];
-		$maxima_day [$z] [0] = $the_big_array [$start_row_night-1][$z];
-		$minima_day [$z] [0]= $the_big_array [$start_row_night-1][$z];
-		$maxima_day [$z] [1] = $the_big_array [$start_row_night-1][0];
-		$minima_day [$z] [1]= $the_big_array [$start_row_night-1][0];
+	$maxima_night [$z] [0] = $the_big_array [$j][$z];
+	$minima_night [$z] [0]= $the_big_array [$j][$z];
+	$maxima_night [$z] [1] = $the_big_array [$j][0];
+	$minima_night [$z] [1]= $the_big_array [$j][0];
 	}
-for (($j = ($rows-1)); $j >= 0; $j--) 
-	{
-		if ($the_big_array[$j][0] > $begin_night)
-		$start_row_night--;
-		
-		if($the_big_array[$j][0] > $begin_day)
-		$start_row_day--;
-	}
-  
-for ($j = $rows-1; $j >= $start_row_night; $j--)
-{ 	
-	for ($z = 0; $z < 9; $z++)
-	{
-		if ($the_big_array [$j][$z] > $maxima_night [$z][0])
-        {
-          $maxima_night [$z][0] = $the_big_array [$j][$z];
-		  $maxima_night [$z][1] = $the_big_array [$j][0];
-        }
-		if ($the_big_array [$j][$z] <= $minima_night [$z][0])
-        {
-          $minima_night [$z][0]= $the_big_array [$j][$z];
-		  $minima_night [$z][1]= $the_big_array [$j][0];
-        }
-	}
-    $count++;
-    for ($z = 0; $z < 9; $z++)
-      {  
-      $rowsum [$z] += $the_big_array [$j][$z];
-      }
-}
-for ($z = 0; $z < 9; $z++)
-      {
-      $averages_night [$z] = round(($rowsum[$z] / $count),2);
-      }
-$count=0;
-for ($i = 0; $i < 9; $i++) 
+		while($the_big_array[$j][0] >= $begin_night)
+		{
+		$night_row_count++;
+			
+			for ($z = 0; $z < 9; $z++)
 			{
-			unset($rowsum[$i]);
+				if ($the_big_array [$j][$z] > $maxima_night [$z][0])
+					{
+					$maxima_night [$z][0] = $the_big_array [$j][$z];
+					$maxima_night [$z][1] = $the_big_array [$j][0];
+					}
+				if ($the_big_array [$j][$z] <= $minima_night [$z][0])
+					{
+					$minima_night [$z][0]= $the_big_array [$j][$z];
+					$minima_night [$z][1]= $the_big_array [$j][0];
+					}
 			}
 		
-//night time calculation finished. Now follows the same for day time
-
-for ($j = ($start_row_night-1); $j >= $start_row_day; $j--)
-{
-	for ($z = 0; $z < 9; $z++)
-	{
-		if ($the_big_array [$j][$z] > $maxima_day [$z][0])
-        {
-          $maxima_day [$z][0] = $the_big_array [$j][$z];
-		  $maxima_day [$z][1] = $the_big_array [$j][0];
-        }
-      
-		if ($the_big_array [$j][$z] <= $minima_day [$z] [0])
-        {
-          $minima_day [$z][0]= $the_big_array [$j][$z];
-		  $minima_day [$z][1]= $the_big_array [$j][0];
-        }
-	}
-    $count++;
-    for ($z = 0; $z < 9; $z++)
-      {  
-      $rowsum [$z] += $the_big_array [$j][$z];
-      }
-}
+		for ($z = 0; $z < 9; $z++)
+		$rowsum_night [$z] += $the_big_array [$j][$z];
+		
+		$j--;
+		}
+		
 for ($z = 0; $z < 9; $z++)
-        {
-        $averages_day [$z] = round(($rowsum[$z] / $count),2);
-        }
+	{		
+	$maxima_day [$z] [0] = $the_big_array [$j][$z];
+	$minima_day [$z] [0]= $the_big_array [$j][$z];
+	$maxima_day [$z] [1] = $the_big_array [$j][0];
+	$minima_day [$z] [1]= $the_big_array [$j][0];		
+	}
+	
+		while($the_big_array[$j][0] >= $begin_day)
+		{
+		$day_row_count++;
+		
+			for ($z = 0; $z < 9; $z++)
+			{
+				if ($the_big_array [$j][$z] > $maxima_day [$z][0])
+					{
+					$maxima_day [$z][0] = $the_big_array [$j][$z];
+					$maxima_day [$z][1] = $the_big_array [$j][0];
+					}
+      
+				if ($the_big_array [$j][$z] <= $minima_day [$z] [0])
+					{
+					$minima_day [$z][0]= $the_big_array [$j][$z];
+					$minima_day [$z][1]= $the_big_array [$j][0];
+					}
+			}
+		for ($z = 0; $z < 9; $z++)
+        $rowsum_day [$z] += $the_big_array [$j][$z];
+	
+		$j--;
+		}
+	
+
+for ($z = 0; $z < 9; $z++)
+	{
+	$averages_night [$z] = round(($rowsum_night[$z] / $night_row_count),2);
+    $averages_day [$z] = round(($rowsum_day[$z] / $day_row_count),2); 
+	}
 
 //run regression to determine slope of atmospheric pressure
 
@@ -161,10 +153,10 @@ else if ($slope >= 0.001){
 else {$current_trend = $trends [1];}
 
 //generate emails to recipients of the mailing list
-for ($i = 0; $i <= $nr_addresses-1; $i++)
+for ($i = 0; $i < $nr_addresses; $i++)
 {
 
-$subject = 'Weather-Station Update'; 
+$subject = "Daily Tassin-la-Demi-Lune Weather Outpost Update"; 
 $headers .= "MIME-Version: 1.0\r\n";
 $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 $message = '
@@ -174,15 +166,15 @@ $message = '
   <title>Summary of the latest weather conditions</title>
 </head>
 <body>
-  <h2>Dear '.$mailing_list[$i][2].',</h2>
-  <p>We thank you for your interest in our weather data. Here are the environmental observations of the last 24 hours.</p>
-  <p>Please note that day-time is considered between 6:00 and 20:00, while night-time is 20:00 until 6:00 in the morning of the following day.</p>  
+  <h2>Good Morning Dear '.$mailing_list[$i][2].',</h2>
+  <p>Here is our newsletter with today\'s weather forecast for Tassin-la-Demi-Lune and the environmental observations of the last 24 hours.</p>
+  <p>Please note that yesterday\'s day-time is triggered 24 hours ago, i.e. yesterday at about 6:00 in the morning. Night-time starts yesterday at about 20:00 and lasts until now.</p>  
   <table>
     <tr>
-      <th>Condition</th><th>Yesterday Day-Time Average</th><th>Yesterday Day-Time Highs</th><th>@</th><th>Yesterday Day-Time Lows</th><th>@</th><th>This Night-Time Average</th><th>This Night Highs</th><th>@</th><th>This Night Lows</th><th>@</th>
+      <th>Condition</th><th>Yesterday Day-Time Average</th><th>Yesterday Day-Time Highs</th><th>@</th><th>Yesterday Day-Time Lows</th><th>@</th><th>This Night Average</th><th>This Night Highs</th><th>@</th><th>This Night Lows</th><th>@</th>
     </tr>
     <tr>
-      <td style="text-align:center">Temperature [° Celsius]</td><td style="text-align:center">'.$averages_day [1].'</td><td style="text-align:center">'.$maxima_day[1][0].'</td><td style="text-align:center">'.date('H',$maxima_day[1][1]).':'.date('i',$maxima_day[1][1]).'</td><td style="text-align:center">'.$minima_day[1][0].'</td><td style="text-align:center">'.date('H',$minima_day[1][1]).':'.date('i',$minima_day[1][1]).'</td><td style="text-align:center">'.$averages_night [1].'</td><td style="text-align:center">'.$maxima_night[1][0].'</td><td style="text-align:center">'.date('H',$maxima_night[1][1]).':'.date('i',$maxima_night[1][1]).'</td><td style="text-align:center">'.$minima_night [1][0].'</td><td style="text-align:center">'.date('H',$minima_night[1][1]).':'.date('i',$minima_night[1][1]).'</td>
+      <td style="text-align:center">Temperature [°C]</td><td style="text-align:center">'.$averages_day [1].'</td><td style="text-align:center">'.$maxima_day[1][0].'</td><td style="text-align:center">'.date('H',$maxima_day[1][1]).':'.date('i',$maxima_day[1][1]).'</td><td style="text-align:center">'.$minima_day[1][0].'</td><td style="text-align:center">'.date('H',$minima_day[1][1]).':'.date('i',$minima_day[1][1]).'</td><td style="text-align:center">'.$averages_night [1].'</td><td style="text-align:center">'.$maxima_night[1][0].'</td><td style="text-align:center">'.date('H',$maxima_night[1][1]).':'.date('i',$maxima_night[1][1]).'</td><td style="text-align:center">'.$minima_night [1][0].'</td><td style="text-align:center">'.date('H',$minima_night[1][1]).':'.date('i',$minima_night[1][1]).'</td>
     </tr>
 	<tr>
       <td style="text-align:center">Pressure [Pa]</td><td style="text-align:center">'.$averages_day [2].'</td><td style="text-align:center">'.$maxima_day[2][0].'</td><td style="text-align:center">'.date('H',$maxima_day[2][1]).':'.date('i',$maxima_day[2][1]).'</td><td style="text-align:center">'.$minima_day[2][0].'</td><td style="text-align:center">'.date('H',$minima_day[2][1]).':'.date('i',$minima_day[2][1]).'</td><td style="text-align:center">'.$averages_night [2].'</td><td style="text-align:center">'.$maxima_night[2][0].'</td><td style="text-align:center">'.date('H',$maxima_night[2][1]).':'.date('i',$maxima_night[2][1]).'</td><td style="text-align:center">'.$minima_night [2][0].'</td><td style="text-align:center">'.date('H',$minima_night[2][1]).':'.date('i',$minima_night[2][1]).'</td>
@@ -206,9 +198,9 @@ $message = '
       <td style="text-align:center">CO-Concentration [PPM]</td><td style="text-align:center">'.$averages_day [8].'</td><td style="text-align:center">'.$maxima_day[8][0].'</td><td style="text-align:center">'.date('H',$maxima_day[8][1]).':'.date('i',$maxima_day[8][1]).'</td><td style="text-align:center">'.$minima_day[8][0].'</td><td style="text-align:center">'.date('H',$minima_day[8][1]).':'.date('i',$minima_day[8][1]).'</td><td style="text-align:center">'.$averages_night [8].'</td><td style="text-align:center">'.$maxima_night[8][0].'</td><td style="text-align:center">'.date('H',$maxima_night[8][1]).':'.date('i',$maxima_night[8][1]).'</td><td style="text-align:center">'.$minima_night [8][0].'</td><td style="text-align:center">'.date('H',$minima_night[8][1]).':'.date('i',$minima_night[8][1]).'</td>
     </tr>
    </table>
-   <p> The short term weather forecast for Tassin-la-Demi-Lune is: <b>'.$current_trend.'!</b></p>
-   <p>We hope that you like the information we provide on the latest weather conditions and thank you very much for your interest.</p>
-      
+   <p>The current environmental observations can be checked <a href="http://family-groh.eu/weatherstation/current_weather.html">here.</a></p>
+   <p>The weather forecast for Tassin-la-Demi-Lune for today is: <b>'.$current_trend.'!</b></p>
+  
 </body>
 </html>'
 ;
@@ -219,4 +211,3 @@ sleep(1);
 }
 
 ?>	   
-
